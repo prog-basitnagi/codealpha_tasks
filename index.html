@@ -1,0 +1,634 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Basit's Gallery</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #080b10;
+  --card: #111720;
+  --text: #f5f7fa;
+  --muted: #929eaf;
+  --blue: #0a84ff;
+  --border: #242d39;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+header {
+  min-height: 76px;
+  padding: 18px 7%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  border-bottom: 1px solid var(--border);
+  background: #0b0f15;
+}
+
+.logo {
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.logo span {
+  color: var(--muted);
+  font-weight: 400;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+nav a {
+  color: #c6cfda;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color .3s;
+}
+
+nav a:hover {
+  color: var(--blue);
+}
+
+.hero {
+  text-align: center;
+  padding: 65px 20px 35px;
+  background:
+    linear-gradient(#080b10a8, #080b10),
+    url("https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=1800&q=80")
+    center/cover;
+}
+
+.eyebrow {
+  color: var(--blue);
+  font-size: 12px;
+  letter-spacing: 4px;
+  margin-bottom: 18px;
+}
+
+.hero h1 {
+  font-size: clamp(36px, 6vw, 64px);
+  letter-spacing: -2px;
+  margin-bottom: 15px;
+}
+
+.hero p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+main {
+  max-width: 1400px;
+  margin: auto;
+  padding: 20px 5% 60px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 20px 0 28px;
+}
+
+.toolbar h2 {
+  font-size: 23px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.filters button {
+  color: #d7deea;
+  background: #111720;
+  border: 1px solid #303a48;
+  border-radius: 25px;
+  padding: 10px 17px;
+  cursor: pointer;
+  transition: .3s;
+}
+
+.filters button:hover,
+.filters button.active {
+  background: var(--blue);
+  color: white;
+  border-color: var(--blue);
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.item {
+  position: relative;
+  min-width: 0;
+  height: 250px;
+  overflow: hidden;
+  border-radius: 15px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  cursor: pointer;
+  animation: fadeIn .4s ease;
+}
+
+.item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .5s ease, filter .5s ease;
+}
+
+.item:hover img {
+  transform: scale(1.09);
+  filter: brightness(.65);
+}
+
+.item-info {
+  position: absolute;
+  inset: auto 0 0;
+  padding: 35px 15px 15px;
+  background: linear-gradient(transparent, #000d);
+  transform: translateY(8px);
+  transition: transform .3s;
+}
+
+.item:hover .item-info {
+  transform: translateY(0);
+}
+
+.item-info h3 {
+  font-size: 17px;
+  margin-bottom: 6px;
+}
+
+.item-info p {
+  color: #d0d6df;
+  font-size: 12px;
+}
+
+.view-icon {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #080b10b8;
+  border: 1px solid #ffffff35;
+  border-radius: 50%;
+  width: 39px;
+  height: 39px;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: .3s;
+}
+
+.item:hover .view-icon {
+  opacity: 1;
+}
+
+.empty {
+  grid-column: 1 / -1;
+  padding: 50px;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 25px;
+  background: #03060bed;
+  backdrop-filter: blur(14px);
+}
+
+.lightbox.open {
+  display: flex;
+  animation: fadeIn .25s ease;
+}
+
+.lightbox-content {
+  width: min(1100px, 100%);
+  display: grid;
+  grid-template-columns: 45px minmax(0, 1fr) 45px 220px;
+  gap: 15px;
+  align-items: center;
+}
+
+.large-image {
+  width: 100%;
+  max-height: 75vh;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.lb-btn,
+.close {
+  color: white;
+  background: #1b2430;
+  border: 1px solid #354150;
+  width: 43px;
+  height: 43px;
+  border-radius: 50%;
+  font-size: 23px;
+  cursor: pointer;
+  transition: .25s;
+}
+
+.lb-btn:hover,
+.close:hover {
+  background: var(--blue);
+}
+
+.close {
+  position: absolute;
+  top: 24px;
+  right: 25px;
+}
+
+.details h2 {
+  font-size: 22px;
+  margin: 12px 0;
+}
+
+.details p {
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.details .category-label {
+  color: var(--blue);
+}
+
+.counter {
+  font-size: 12px !important;
+}
+
+footer {
+  padding: 28px 15px;
+  text-align: center;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 1000px) {
+  .gallery {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lightbox-content {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  .details {
+    grid-column: 2;
+    text-align: center;
+  }
+}
+
+@media (max-width: 650px) {
+  header {
+    padding: 18px 5%;
+  }
+
+  nav {
+    gap: 14px;
+  }
+
+  .hero {
+    padding: 55px 15px 30px;
+  }
+
+  main {
+    padding: 15px 5% 40px;
+  }
+
+  .gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+
+  .item {
+    height: 190px;
+  }
+
+  .item-info {
+    padding: 30px 10px 12px;
+  }
+
+  .item-info h3 {
+    font-size: 14px;
+  }
+
+  .toolbar {
+    align-items: flex-start;
+  }
+
+  .filters {
+    gap: 7px;
+  }
+
+  .filters button {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .lightbox {
+    padding: 12px;
+  }
+
+  .lightbox-content {
+    grid-template-columns: 34px minmax(0, 1fr) 34px;
+    gap: 7px;
+  }
+
+  .large-image {
+    max-height: 55vh;
+  }
+
+  .lb-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 19px;
+  }
+
+  .details h2 {
+    font-size: 19px;
+  }
+}
+
+@media (max-width: 360px) {
+  .gallery {
+    grid-template-columns: 1fr;
+  }
+
+  .item {
+    height: 230px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">◉ Basit's <span>Gallery</span></div>
+  <nav>
+    <a href="#home">Home</a>
+    <a href="#gallery">Gallery</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="eyebrow">EXPLORE · CAPTURE · RELIVE</div>
+  <h1>My Image Gallery.</h1>
+  <p>A collection of technology, places and things I love.</p>
+</section>
+
+<main id="gallery">
+  <div class="toolbar">
+    <h2>Featured Collection</h2>
+
+    <div class="filters">
+      <button class="active" data-filter="All">All</button>
+      <button data-filter="iPhone">iPhone</button>
+      <button data-filter="Technology">Tech</button>
+      <button data-filter="Cars">Cars</button>
+      <button data-filter="Travel">Travel</button>
+    </div>
+  </div>
+
+  <section class="gallery" id="grid"></section>
+</main>
+
+<div class="lightbox" id="lightbox"
+     role="dialog" aria-modal="true"
+     aria-label="Image viewer">
+  <button class="close" id="close" aria-label="Close">×</button>
+
+  <div class="lightbox-content">
+    <button class="lb-btn" id="prev" aria-label="Previous">‹</button>
+    <img class="large-image" id="largeImage" alt="">
+    <button class="lb-btn" id="next" aria-label="Next">›</button>
+
+    <div class="details">
+      <p class="category-label" id="lbCategory"></p>
+      <h2 id="lbTitle"></h2>
+      <p>Explore the details in this featured image.</p>
+      <p class="counter" id="counter"></p>
+    </div>
+  </div>
+</div>
+
+<footer id="about">
+  © 2026 Basit's Gallery · Designed with HTML, CSS & JavaScript
+</footer>
+
+<script>
+const photos = [
+  { title: "iPhone Photography", category: "iPhone",
+    url: "photo-1592750475338-74b7b21085ab" },
+  { title: "Apple Devices", category: "iPhone",
+    url: "photo-1511707171634-5f897ff02aa9" },
+  { title: "Premium Smartphone", category: "iPhone",
+    url: "photo-1512499617640-c74ae3a79d37" },
+  { title: "Modern Technology", category: "Technology",
+    url: "photo-1518770660439-4636190af475" },
+  { title: "Gaming Setup", category: "Technology",
+    url: "photo-1593305841991-05c297ba4575" },
+  { title: "Computer Workspace", category: "Technology",
+    url: "photo-1498050108023-c5249f4df085" },
+  { title: "Luxury Car", category: "Cars",
+    url: "photo-1503376780353-7e6692767b70" },
+  { title: "Sports Car", category: "Cars",
+    url: "photo-1492144534655-ae79c964c9d7" },
+  { title: "Mountain Escape", category: "Travel",
+    url: "photo-1464822759023-fed622ff2c3b" },
+  { title: "Ocean View", category: "Travel",
+    url: "photo-1507525428034-b723cf961d3e" },
+  { title: "Night City", category: "Travel",
+    url: "photo-1519608487953-e999c86e7455" },
+  { title: "Beautiful Landscape", category: "Travel",
+    url: "photo-1470770841072-f978cf4d019e" }
+];
+
+const grid = document.getElementById("grid");
+const lightbox = document.getElementById("lightbox");
+const largeImage = document.getElementById("largeImage");
+
+let filteredPhotos = [...photos];
+let currentIndex = 0;
+let previousFocus = null;
+
+function getImage(url, width = 700) {
+  return `https://images.unsplash.com/${url}?auto=format&fit=crop&w=${width}&q=85`;
+}
+
+function renderGallery() {
+  grid.innerHTML = "";
+
+  if (!filteredPhotos.length) {
+    grid.innerHTML = '<p class="empty">No images in this category.</p>';
+    return;
+  }
+
+  filteredPhotos.forEach((photo, index) => {
+    const card = document.createElement("article");
+    card.className = "item";
+    card.tabIndex = 0;
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", "View " + photo.title);
+
+    const image = document.createElement("img");
+    image.src = getImage(photo.url);
+    image.alt = photo.title;
+    image.loading = "lazy";
+
+    const icon = document.createElement("span");
+    icon.className = "view-icon";
+    icon.textContent = "↗";
+
+    const info = document.createElement("div");
+    info.className = "item-info";
+
+    const heading = document.createElement("h3");
+    heading.textContent = photo.title;
+
+    const tag = document.createElement("p");
+    tag.textContent = photo.category;
+
+    info.append(heading, tag);
+    card.append(image, icon, info);
+
+    card.addEventListener("click", () => openViewer(index));
+    card.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        openViewer(index);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+}
+
+function openViewer(index) {
+  currentIndex = index;
+  previousFocus = document.activeElement;
+  updateViewer();
+  lightbox.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("close").focus();
+}
+
+function updateViewer() {
+  const photo = filteredPhotos[currentIndex];
+  if (!photo) return;
+
+  largeImage.src = getImage(photo.url, 1500);
+  largeImage.alt = photo.title;
+  document.getElementById("lbTitle").textContent = photo.title;
+  document.getElementById("lbCategory").textContent = photo.category;
+  document.getElementById("counter").textContent =
+    `${currentIndex + 1} of ${filteredPhotos.length} images`;
+}
+
+function moveImage(direction) {
+  if (filteredPhotos.length < 2) return;
+
+  currentIndex =
+    (currentIndex + direction + filteredPhotos.length)
+    % filteredPhotos.length;
+
+  updateViewer();
+}
+
+function closeViewer() {
+  lightbox.classList.remove("open");
+  document.body.style.overflow = "";
+
+  if (previousFocus) previousFocus.focus();
+}
+
+document.querySelectorAll(".filters button").forEach(button => {
+  button.addEventListener("click", () => {
+    document.querySelector(".filters button.active")
+      ?.classList.remove("active");
+
+    button.classList.add("active");
+
+    const category = button.dataset.filter;
+
+    filteredPhotos = category === "All"
+      ? [...photos]
+      : photos.filter(photo => photo.category === category);
+
+    renderGallery();
+
+    if (lightbox.classList.contains("open")) {
+      closeViewer();
+    }
+  });
+});
+
+document.getElementById("prev").addEventListener("click",
+  () => moveImage(-1));
+
+document.getElementById("next").addEventListener("click",
+  () => moveImage(1));
+
+document.getElementById("close").addEventListener("click",
+  closeViewer);
+
+lightbox.addEventListener("click", event => {
+  if (event.target === lightbox) closeViewer();
+});
+
+document.addEventListener("keydown", event => {
+  if (!lightbox.classList.contains("open")) return;
+
+  if (event.key === "Escape") closeViewer();
+  if (event.key === "ArrowLeft") moveImage(-1);
+  if (event.key === "ArrowRight") moveImage(1);
+});
+
+renderGallery();
+</script>
+
+</body>
+</html>
