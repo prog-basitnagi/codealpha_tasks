@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Calculator</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #141e30, #243b55);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .calculator {
+            width: 320px;
+            padding: 20px;
+            background: #1e293b;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px #00000050;
+        }
+
+        #display {
+            width: 100%;
+            height: 75px;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #0f172a;
+            color: white;
+            font-size: 28px;
+            text-align: right;
+            outline: none;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            height: 55px;
+            border: none;
+            border-radius: 10px;
+            background: #334155;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: #475569;
+            transform: scale(1.04);
+        }
+
+        .operator {
+            background: #f59e0b;
+            color: #111827;
+        }
+
+        .operator:hover {
+            background: #fbbf24;
+        }
+
+        .clear {
+            background: #ef4444;
+        }
+
+        .clear:hover {
+            background: #dc2626;
+        }
+
+        .equal {
+            background: #22c55e;
+            color: #052e16;
+            grid-column: span 2;
+        }
+
+        .equal:hover {
+            background: #4ade80;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="calculator">
+        <input type="text" id="display"
+               placeholder="0" readonly>
+
+        <div class="buttons">
+            <button class="clear" onclick="clearDisplay()">C</button>
+            <button onclick="deleteLast()">DEL</button>
+            <button class="operator" onclick="chooseOperator('%')">%</button>
+            <button class="operator" onclick="chooseOperator('/')">÷</button>
+
+            <button onclick="addNumber('7')">7</button>
+            <button onclick="addNumber('8')">8</button>
+            <button onclick="addNumber('9')">9</button>
+            <button class="operator" onclick="chooseOperator('*')">×</button>
+
+            <button onclick="addNumber('4')">4</button>
+            <button onclick="addNumber('5')">5</button>
+            <button onclick="addNumber('6')">6</button>
+            <button class="operator" onclick="chooseOperator('-')">−</button>
+
+            <button onclick="addNumber('1')">1</button>
+            <button onclick="addNumber('2')">2</button>
+            <button onclick="addNumber('3')">3</button>
+            <button class="operator" onclick="chooseOperator('+')">+</button>
+
+            <button class="zero" onclick="addNumber('0')">0</button>
+            <button onclick="addNumber('.')">.</button>
+            <button class="equal" onclick="calculate()">=</button>
+        </div>
+    </div>
+
+    <script>
+        let display = document.getElementById("display");
+        let firstNumber = "";
+        let operator = "";
+        let newNumber = true;
+
+        function addNumber(number) {
+            if (newNumber) {
+                display.value = "";
+                newNumber = false;
+            }
+
+            if (number === "." && display.value.includes(".")) {
+                return;
+            }
+
+            display.value += number;
+        }
+
+        function chooseOperator(op) {
+            if (display.value === "" && firstNumber === "") {
+                return;
+            }
+
+            if (operator !== "" && !newNumber) {
+                calculate();
+            }
+
+            firstNumber = display.value;
+            operator = op;
+            newNumber = true;
+        }
+
+        function calculate() {
+            if (firstNumber === "" || operator === "" ||
+                display.value === "") {
+                return;
+            }
+
+            let a = Number(firstNumber);
+            let b = Number(display.value);
+            let result;
+
+            if (operator === "+") {
+                result = a + b;
+            } else if (operator === "-") {
+                result = a - b;
+            } else if (operator === "*") {
+                result = a * b;
+            } else if (operator === "/") {
+                if (b === 0) {
+                    display.value = "Cannot divide by 0";
+                    firstNumber = "";
+                    operator = "";
+                    newNumber = true;
+                    return;
+                }
+                result = a / b;
+            } else if (operator === "%") {
+                result = a % b;
+            }
+
+            display.value = String(
+                Number(result.toPrecision(10))
+            );
+
+            firstNumber = "";
+            operator = "";
+            newNumber = true;
+        }
+
+        function clearDisplay() {
+            display.value = "";
+            firstNumber = "";
+            operator = "";
+            newNumber = true;
+        }
+
+        function deleteLast() {
+            if (newNumber) {
+                return;
+            }
+
+            display.value = display.value.slice(0, -1);
+        }
+
+        document.addEventListener("keydown", function(event) {
+            let key = event.key;
+
+            if (key >= "0" && key <= "9") {
+                addNumber(key);
+            } else if (key === ".") {
+                addNumber(".");
+            } else if (["+", "-", "*", "/", "%"].includes(key)) {
+                chooseOperator(key);
+            } else if (key === "Enter" || key === "=") {
+                calculate();
+            } else if (key === "Backspace") {
+                deleteLast();
+            } else if (key === "Escape") {
+                clearDisplay();
+            }
+        });
+    </script>
+
+</body>
+</html>
