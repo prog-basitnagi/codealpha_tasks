@@ -1,0 +1,504 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abdul Basit | Portfolio</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 85px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0b1120;
+            color: #f1f5f9;
+            line-height: 1.7;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            background: #0b1120ee;
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid #253047;
+        }
+
+        nav {
+            max-width: 1100px;
+            margin: auto;
+            padding: 18px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 24px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #cbd5e1;
+            transition: 0.3s;
+        }
+
+        nav a:hover {
+            color: #38bdf8;
+        }
+
+        section {
+            max-width: 1100px;
+            margin: auto;
+            padding: 85px 24px;
+        }
+
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            gap: 45px;
+            justify-content: space-between;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .tag {
+            color: #38bdf8;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        h1 {
+            font-size: clamp(38px, 6vw, 64px);
+            line-height: 1.2;
+            margin: 18px 0;
+        }
+
+        h1 span, h2 span {
+            color: #38bdf8;
+        }
+
+        .hero p, .about p {
+            color: #aab8cc;
+            max-width: 650px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 14px;
+            margin-top: 28px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #38bdf8;
+            color: #07111f;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            border: 1px solid #38bdf8;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px #38bdf833;
+        }
+
+        .btn.secondary {
+            background: transparent;
+            color: #38bdf8;
+        }
+
+        .profile {
+            flex-shrink: 0;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 3px solid #38bdf8;
+            background: #17243a;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 80px;
+            color: #38bdf8;
+            box-shadow: 0 0 50px #38bdf822;
+        }
+
+        h2 {
+            font-size: 36px;
+            margin-bottom: 24px;
+        }
+
+        .about, .contact {
+            text-align: center;
+        }
+
+        .about p, .contact p {
+            margin: 0 auto;
+        }
+
+        .skills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .skill {
+            padding: 12px 22px;
+            border-radius: 8px;
+            background: #17243a;
+            border: 1px solid #2b3b55;
+            color: #7dd3fc;
+            transition: 0.3s;
+        }
+
+        .skill:hover {
+            background: #1e3a5f;
+            transform: translateY(-4px);
+        }
+
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 22px;
+        }
+
+        .project {
+            background: #121d30;
+            border: 1px solid #26364f;
+            border-radius: 14px;
+            padding: 26px;
+            transition: 0.3s;
+        }
+
+        .project:hover {
+            transform: translateY(-7px);
+            border-color: #38bdf8;
+        }
+
+        .project h3 {
+            margin-bottom: 12px;
+            color: #7dd3fc;
+            font-size: 21px;
+        }
+
+        .project p {
+            color: #aab8cc;
+            margin-bottom: 18px;
+        }
+
+        .tech {
+            color: #38bdf8;
+            font-size: 13px;
+        }
+
+        .resume-box {
+            background: #121d30;
+            border: 1px solid #26364f;
+            border-radius: 15px;
+            padding: 35px;
+            text-align: center;
+        }
+
+        .resume-box p {
+            color: #aab8cc;
+            margin-bottom: 22px;
+        }
+
+        .contact-links {
+            margin-top: 25px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .contact-links a {
+            color: #38bdf8;
+            text-decoration: none;
+        }
+
+        .contact-links a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            text-align: center;
+            color: #94a3b8;
+            border-top: 1px solid #253047;
+            padding: 24px;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(25px);
+            transition: opacity 0.7s ease,
+                        transform 0.7s ease;
+        }
+
+        .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 800px) {
+            .hero {
+                flex-direction: column-reverse;
+                justify-content: center;
+                text-align: center;
+                padding-top: 55px;
+            }
+
+            .hero .buttons {
+                justify-content: center;
+            }
+
+            .profile {
+                width: 180px;
+                height: 180px;
+                font-size: 60px;
+            }
+
+            .project-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            nav {
+                flex-direction: column;
+            }
+
+            nav ul {
+                gap: 16px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .project-grid {
+                grid-template-columns: 1fr;
+            }
+
+            h2 {
+                font-size: 30px;
+            }
+
+            nav ul {
+                gap: 12px;
+                font-size: 14px;
+            }
+
+            section {
+                padding: 65px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">Basit.dev</div>
+
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#resume">Resume</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <div class="tag">WELCOME TO MY PORTFOLIO</div>
+
+                <h1>Hi, I'm <span>Abdul Basit</span></h1>
+
+                <h3>Software Engineering Student</h3>
+
+                <p>
+                    I am a student passionate about programming,
+                    web development, and building useful software
+                    projects. I enjoy learning new technologies
+                    and improving my development skills.
+                </p>
+
+                <div class="buttons">
+                    <a href="#projects" class="btn">View My Work</a>
+                    <a href="#contact" class="btn secondary">
+                        Contact Me
+                    </a>
+                </div>
+            </div>
+
+            <div class="profile">AB</div>
+        </section>
+
+        <section class="about reveal" id="about">
+            <h2>About <span>Me</span></h2>
+
+            <p>
+                I am a Software Engineering student interested
+                in creating simple, useful, and user-friendly
+                applications. I have worked on academic projects
+                involving Java programming, databases, and web
+                development. My goal is to gain practical
+                experience and become a skilled software developer.
+            </p>
+        </section>
+
+        <section class="reveal" id="skills">
+            <h2>My <span>Skills</span></h2>
+
+            <div class="skills">
+                <div class="skill">HTML</div>
+                <div class="skill">CSS</div>
+                <div class="skill">JavaScript</div>
+                <div class="skill">Java</div>
+                <div class="skill">PHP</div>
+                <div class="skill">MySQL</div>
+                <div class="skill">MS Word</div>
+                <div class="skill">MS Excel</div>
+            </div>
+        </section>
+
+        <section class="reveal" id="projects">
+            <h2>My <span>Projects</span></h2>
+
+            <div class="project-grid">
+
+                <div class="project">
+                    <h3>Book Store System</h3>
+                    <p>
+                        A Java application for managing books,
+                        employees, customers, and invoices.
+                    </p>
+                    <div class="tech">Java | OOP</div>
+                </div>
+
+                <div class="project">
+                    <h3>Order Management</h3>
+                    <p>
+                        A web application for adding, viewing,
+                        editing, deleting, and searching orders.
+                    </p>
+                    <div class="tech">HTML | CSS | PHP | MySQL</div>
+                </div>
+
+                <div class="project">
+                    <h3>Personal Portfolio</h3>
+                    <p>
+                        A responsive personal website to showcase
+                        skills, projects, and contact information.
+                    </p>
+                    <div class="tech">HTML | CSS | JavaScript</div>
+                </div>
+
+            </div>
+        </section>
+
+        <section class="reveal" id="resume">
+            <div class="resume-box">
+                <h2>My <span>Resume</span></h2>
+
+                <p>
+                    Want to know more about my education,
+                    skills, and experience? View my resume.
+                </p>
+
+                <a href="resume.pdf" class="btn" download>
+                    Download Resume
+                </a>
+            </div>
+        </section>
+
+        <section class="contact reveal" id="contact">
+            <h2>Contact <span>Me</span></h2>
+
+            <p>
+                I am interested in internships, learning
+                opportunities, and software development projects.
+                Feel free to get in touch.
+            </p>
+
+            <div class="contact-links">
+                <a href="mailto:your-email@example.com">
+                    Email Me
+                </a>
+
+                <a href="https://github.com/your-username"
+                   target="_blank" rel="noopener noreferrer">
+                    GitHub
+                </a>
+
+                <a href="https://www.linkedin.com/"
+                   target="_blank" rel="noopener noreferrer">
+                    LinkedIn
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© <span id="year"></span> Abdul Basit. All rights reserved.</p>
+        <p>Designed and built with HTML, CSS & JavaScript.</p>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent =
+            new Date().getFullYear();
+
+        let sections = document.querySelectorAll(".reveal");
+
+        let observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("show");
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, {
+            threshold: 0.15
+        });
+
+        sections.forEach(function(section) {
+            observer.observe(section);
+        });
+    </script>
+
+</body>
+</html>
